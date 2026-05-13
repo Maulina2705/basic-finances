@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>TABUNGAN 2027</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- APP -->
+    <main class="app">
+        <div class="admin-banner" id="adminBanner">
+
+            <span>
+                ADMIN MODE ACTIVE
+            </span>
+
+            <button id="logoutBtn">
+                Logout
+            </button>
+
+        </div>
+
+        <!-- DASHBOARD -->
+        <section id="dashboardPage" class="page active">
+
+            <!-- HERO -->
+            <div class="hero-card">
+
+                <div class="hero-top">
+                    <p class="hero-label">TABUNGAN 2027</p>
+                    <span class="hero-status">Active</span>
+                </div>
+
+                <h1 class="hero-total" id="totalMoney">
+                    Rp 0
+                </h1>
+
+                <div class="hero-progress">
+
+                    <div class="progress-info">
+                        <span>Target Tahunan</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+
+                    <p class="progress-target" id="progressTarget">
+                        Rp 0 / Rp 60.000.000
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="summary-grid">
+
+                <div class="summary-card">
+                    <p>Total Anggota</p>
+                    <h2 id="totalMembers">0</h2>
+                </div>
+
+                <div class="summary-card">
+                    <p>Sudah Bayar</p>
+                    <h2 id="paidMembers">0</h2>
+                </div>
+
+                <div class="summary-card warning">
+                    <p>Menunggak</p>
+                    <h2 id="lateMembers">0</h2>
+                </div>
+
+            </div>
+
+            <!-- ALERT -->
+            <div class="section-header">
+                <h3>Perlu Perhatian</h3>
+            </div>
+
+            <div class="alert-list" id="alertList"></div>
+
+            <!-- QUICK MEMBERS -->
+            <div class="section-header">
+                <h3>Ringkasan Anggota</h3>
+            </div>
+
+            <div class="member-list" id="memberList"></div>
+
+            </div>
+
+        </section>
+
+        <!-- CHECKLIST PAGE -->
+        <section id="checklistPage" class="page">
+
+            <div class="section-header">
+                <h3>Checklist Pembayaran</h3>
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="checklist-table">
+
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Jan</th>
+                            <th>Feb</th>
+                            <th>Mar</th>
+                            <th>Apr</th>
+                            <th>Mei</th>
+                            <th>Jun</th>
+                            <th>Jul</th>
+                            <th>Agu</th>
+                            <th>Sep</th>
+                            <th>Okt</th>
+                            <th>Nov</th>
+                            <th>Des</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="checklistBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+
+        <button class="nav-btn active" data-page="dashboardPage">
+            Dashboard
+        </button>
+
+        <button class="nav-btn" data-page="checklistPage">
+            Checklist
+        </button>
+
+        <button class="nav-btn" id="adminBtn">
+            Admin
+        </button>
+
+    </nav>
+
+    <!-- RECEIPT MODAL -->
+    <div class="modal" id="receiptModal">
+
+        <div class="modal-content">
+
+            <div class="receipt-header">
+                <h3>Pembayaran Berhasil</h3>
+                <p>Receipt Digital</p>
+            </div>
+
+            <div class="receipt-body">
+
+                <div class="receipt-row">
+                    <span>Nama</span>
+                    <strong id="receiptName">-</strong>
+                </div>
+
+                <div class="receipt-row">
+                    <span>Bulan</span>
+                    <strong id="receiptMonth">-</strong>
+                </div>
+
+                <div class="receipt-row">
+                    <span>Nominal</span>
+                    <strong id="receiptAmount">-</strong>
+                </div>
+
+                <div class="receipt-row">
+                    <span>Transaction ID</span>
+                    <strong id="receiptId">-</strong>
+                </div>
+
+                <div class="receipt-row">
+                    <span>Status</span>
+                    <strong class="success-text">
+                        SUCCESS
+                    </strong>
+                </div>
+
+            </div>
+
+            <button class="close-btn">
+                Tutup
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ADMIN MODAL -->
+    <div class="modal" id="adminModal">
+
+        <div class="modal-content">
+
+            <h3>Admin Login</h3>
+
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" placeholder="Masukkan username">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="Masukkan password">
+            </div>
+
+            <button class="login-btn">
+                Login
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- EDIT MODAL -->
+
+    <div class="modal" id="editModal">
+
+        <div class="modal-content">
+
+            <h2>Update Status</h2>
+
+            <p class="modal-subtitle">
+                Ubah status pembayaran anggota
+            </p>
+
+            <div class="status-options">
+
+                <button class="status-option green-option" data-status="green">
+
+                    Lunas
+                </button>
+
+                <button class="status-option yellow-option" data-status="yellow">
+
+                    Belum Bayar
+                </button>
+
+                <button class="status-option red-option" data-status="red">
+
+                    Menunggak
+                </button>
+
+            </div>
+
+            <button id="saveStatusBtn">
+                Simpan Perubahan
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="script.js"></script>   
+
+</body>
+
+</html>
