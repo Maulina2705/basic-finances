@@ -883,6 +883,45 @@ body {
     align-items: center;
 }
 
+.search-box {
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    padding: 14px 18px;
+
+    border-radius: 18px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.05);
+
+}
+
+.search-box i {
+
+    color: #94a3b8;
+
+    font-size: 14px;
+
+}
+
+.search-box input {
+
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    font-size: 14px;
+    font-family: inherit;
+    color: #111827;
+}
+
 #addMemberBtn {
     border: none;
     background: #111827;
@@ -1011,4 +1050,93 @@ body {
     color: #64748b;
     font-size: 14px;
     line-height: 1.6;
+}
+
+.filter-group {
+
+    display: flex;
+    gap: 10px;
+
+    overflow-x: auto;
+
+    margin-bottom: 18px;
+
+    padding-bottom: 4px;
+
+}
+
+.filter-btn {
+
+    border: none;
+
+    background: white;
+
+    padding: 10px 16px;
+
+    border-radius: 14px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    box-shadow:
+        0 8px 18px rgba(15, 23, 42, 0.05);
+
+}
+
+.filter-btn.active {
+
+    background: #111827;
+    color: white;
+
+}
+
+.sort-box {
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    padding: 14px 18px;
+
+    border-radius: 18px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.05);
+
+}
+
+.sort-box i {
+
+    color: #94a3b8;
+
+    font-size: 14px;
+
+}
+
+.sort-box select {
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    width: 100%;
+
+    font-size: 14px;
+
+    font-family: inherit;
+
+    color: #111827;
+
+    cursor: pointer;
+
 }

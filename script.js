@@ -462,12 +462,94 @@ renderAlerts();
 // ========================================
 
 const memberList = document.getElementById("memberList");
+const searchMemberInput = document.getElementById("searchMemberInput");
+const filterButtons = document.querySelectorAll(".filter-btn");
+
+let currentFilter = "all";
 
 function renderMembers() {
 
     memberList.innerHTML = "";
 
-    if (members.length === 0) {
+    const keyword =
+        searchMemberInput.value
+            .toLowerCase();
+
+    const filteredMembers =
+        members.filter(member => {
+
+            const matchSearch =
+                member.name
+                    .toLowerCase()
+                    .includes(keyword);
+
+            const dashboardStatus =
+                calculateDashboardStatus(member);
+
+            const matchFilter =
+                currentFilter === "all"
+                ||
+                dashboardStatus === currentFilter;
+
+            return (
+                matchSearch &&
+                matchFilter
+            );
+
+        });
+
+    if (filteredMembers.length === 0) {
+
+        let title =
+            "Tidak Ada Anggota";
+
+        let description =
+            "Tambah anggota baru untuk memulai tabungan";
+
+        // search aktif
+        if (
+            searchMemberInput.value
+                .trim() !== ""
+        ) {
+
+            title =
+                "Member Tidak Ditemukan";
+
+            description =
+                "Coba gunakan kata kunci lain";
+
+        }
+
+        // filter aktif
+        else if (
+            currentFilter !== "all"
+        ) {
+
+            if (currentFilter === "green") {
+
+                title =
+                    "Tidak Ada Member Aman";
+
+            }
+
+            if (currentFilter === "yellow") {
+
+                title =
+                    "Tidak Ada Member Pending";
+
+            }
+
+            if (currentFilter === "red") {
+
+                title =
+                    "Tidak Ada Member Menunggak";
+
+            }
+
+            description =
+                "Semua status terlihat aman";
+
+        }
 
         memberList.innerHTML = `
 
@@ -475,11 +557,9 @@ function renderMembers() {
 
             <i class="fa-solid fa-users"></i>
 
-            <h3>Belum Ada Anggota</h3>
+            <h3>${title}</h3>
 
-            <p>
-                Tambah anggota baru untuk memulai tabungan
-            </p>
+            <p>${description}</p>
 
         </div>
 
@@ -489,7 +569,7 @@ function renderMembers() {
 
     }
 
-    members.forEach(member => {
+    filteredMembers.forEach(member => {
 
         const dashboardStatus =
             calculateDashboardStatus(member);
@@ -1499,3 +1579,50 @@ if (isAdmin) {
     adminBanner.style.display = "flex";
     showAdminControls();
 }
+
+// ========================================
+// MEMBER SEARCH
+// ========================================
+
+searchMemberInput.addEventListener(
+    "input",
+    () => {
+
+        renderMembers();
+
+        if (isAdmin) {
+            showAdminControls();
+        }
+
+    }
+);
+
+// ========================================
+// MEMBER FILTER
+// ========================================
+
+filterButtons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            filterButtons.forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            button.classList.add("active");
+
+            currentFilter =
+                button.dataset.filter;
+
+            renderMembers();
+
+            if (isAdmin) {
+                showAdminControls();
+            }
+
+        }
+    );
+
+});

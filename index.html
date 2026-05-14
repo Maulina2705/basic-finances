@@ -109,6 +109,56 @@
 
             </div>
 
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input type="text" id="searchMemberInput" placeholder="Cari anggota...">
+
+            </div>
+
+            <div class="filter-group">
+
+                <button class="filter-btn active" data-filter="all">
+                    Semua
+                </button>
+
+                <button class="filter-btn" data-filter="green">
+                    Aman
+                </button>
+
+                <button class="filter-btn" data-filter="yellow">
+                    Pending
+                </button>
+
+                <button class="filter-btn" data-filter="red">
+                    Menunggak
+                </button>
+
+            </div>
+
+            <div class="sort-box">
+
+                <i class="fa-solid fa-arrow-down-wide-short"></i>
+
+                <select id="sortSelect">
+
+                    <option value="name">
+                        Nama
+                    </option>
+
+                    <option value="money">
+                        Tabungan
+                    </option>
+
+                    <option value="status">
+                        Status
+                    </option>
+
+                </select>
+
+            </div>
+
             <div class="member-list" id="memberList"></div>
 
             </div>
