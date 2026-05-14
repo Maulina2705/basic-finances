@@ -15,6 +15,8 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 
 <body>
@@ -95,8 +97,16 @@
             <div class="alert-list" id="alertList"></div>
 
             <!-- QUICK MEMBERS -->
-            <div class="section-header">
+            <div class="section-header member-header">
+
                 <h3>Ringkasan Anggota</h3>
+
+                <button id="addMemberBtn" class="hidden">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </button>
+
             </div>
 
             <div class="member-list" id="memberList"></div>
@@ -119,8 +129,6 @@
                     <thead>
                         <tr>
                             <th>Nama</th>
-                            <th>Jan</th>
-                            <th>Feb</th>
                             <th>Mar</th>
                             <th>Apr</th>
                             <th>Mei</th>
@@ -131,6 +139,8 @@
                             <th>Okt</th>
                             <th>Nov</th>
                             <th>Des</th>
+                            <th>Jan</th>
+                            <th>Feb</th>
                         </tr>
                     </thead>
 
@@ -202,9 +212,64 @@
 
             </div>
 
+            <div class="receipt-history" id="receiptHistory">
+            </div>
+
             <button class="close-btn">
                 Tutup
             </button>
+
+        </div>
+
+    </div>
+
+    <!-- EDIT MEMBER MODAL -->
+
+    <div class="modal" id="editMemberModal">
+
+        <div class="modal-content">
+
+            <h2>Edit Nama Member</h2>
+
+            <div class="input-group">
+
+                <label>Nama Baru</label>
+
+                <input type="text" id="editMemberInput" placeholder="Masukkan nama baru">
+
+            </div>
+
+            <button id="saveMemberNameBtn" class="login-btn">
+                Simpan Nama
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- DELETE MODAL -->
+
+    <div class="modal-overlay" id="deleteModal">
+
+        <div class="modal-card">
+
+            <h2>Hapus Member</h2>
+
+            <p>
+                Yakin ingin menghapus anggota ini?
+            </p>
+
+            <div class="delete-actions">
+
+                <button class="cancel-delete-btn" id="cancelDeleteBtn">
+                    Batal
+                </button>
+
+                <button class="confirm-delete-btn" id="confirmDeleteBtn">
+                    Hapus
+                </button>
+
+            </div>
 
         </div>
 
@@ -219,16 +284,18 @@
 
             <div class="input-group">
                 <label>Username</label>
-                <input type="text" placeholder="Masukkan username">
+                <input type="text" id="adminUsername" placeholder="Masukkan username">
             </div>
 
             <div class="input-group">
                 <label>Password</label>
-                <input type="password" placeholder="Masukkan password">
+                <input type="password" id="adminPassword" placeholder="Masukkan password">
             </div>
 
-            <button class="login-btn">
+            <button class="login-btn" id="adminLoginBtn">
+
                 Login
+
             </button>
 
         </div>
@@ -274,8 +341,35 @@
 
     </div>
 
+    <!-- ADD MEMBER MODAL -->
+
+    <div class="modal" id="addMemberModal">
+
+        <div class="modal-content">
+
+            <div class="receipt-header">
+                <h3>Tambah Anggota</h3>
+                <p>Masukkan nama anggota baru</p>
+            </div>
+
+            <div class="input-group">
+
+                <label>Nama Anggota</label>
+
+                <input type="text" id="newMemberName" placeholder="Contoh: Maulina">
+
+            </div>
+
+            <button id="saveMemberBtn">
+                Tambah Member
+            </button>
+
+        </div>
+
+    </div>
+
     <!-- JS -->
-    <script src="script.js"></script>   
+    <script src="script.js"></script>
 
 </body>
 
