@@ -464,8 +464,9 @@ renderAlerts();
 const memberList = document.getElementById("memberList");
 const searchMemberInput = document.getElementById("searchMemberInput");
 const filterButtons = document.querySelectorAll(".filter-btn");
-
 let currentFilter = "all";
+const sortSelect = document.getElementById("sortSelect");
+let currentSort = "name";
 
 function renderMembers() {
 
@@ -497,6 +498,53 @@ function renderMembers() {
             );
 
         });
+
+    // ========================================
+    // SORT MEMBER
+    // ========================================
+
+    filteredMembers.sort((a, b) => {
+
+        // sort nama
+        if (currentSort === "name") {
+
+            return a.name.localeCompare(b.name);
+
+        }
+
+        // sort tabungan terbesar
+        if (currentSort === "money") {
+
+            return (
+                calculateMemberTotal(b)
+                -
+                calculateMemberTotal(a)
+            );
+
+        }
+
+        // sort status
+        if (currentSort === "status") {
+
+            const statusOrder = {
+                red: 0,
+                yellow: 1,
+                green: 2
+            };
+
+            return (
+                statusOrder[
+                calculateDashboardStatus(a)
+                ]
+                -
+                statusOrder[
+                calculateDashboardStatus(b)
+                ]
+            );
+
+        }
+
+    });
 
     if (filteredMembers.length === 0) {
 
@@ -1626,3 +1674,23 @@ filterButtons.forEach(button => {
     );
 
 });
+
+// ========================================
+// MEMBER SORT
+// ========================================
+
+sortSelect.addEventListener(
+    "change",
+    () => {
+
+        currentSort =
+            sortSelect.value;
+
+        renderMembers();
+
+        if (isAdmin) {
+            showAdminControls();
+        }
+
+    }
+);
