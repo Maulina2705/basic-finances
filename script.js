@@ -185,10 +185,7 @@ const savedMembers =
     localStorage.getItem("tabunganMembers");
 
 // pakai data localStorage kalau ada
-const members =
-    savedMembers
-        ? JSON.parse(savedMembers)
-        : defaultMembers;
+let members = [];
 
 // ========================================
 // SAVE DATA
@@ -232,6 +229,16 @@ function generateReceiptHistory() {
 
     members.forEach(member => {
 
+        // kalau sudah ada history asli
+        // jangan overwrite lagi
+
+        if (
+            member.receiptHistory &&
+            member.receiptHistory.length > 0
+        ) {
+            return;
+        }
+
         member.receiptHistory = [];
 
         member.months.forEach((status, index) => {
@@ -243,6 +250,10 @@ function generateReceiptHistory() {
             const year =
                 index <= 9 ? 2026 : 2027;
 
+            // =========================
+            // PAID
+            // =========================
+
             if (status === "paid") {
 
                 member.receiptHistory.push({
@@ -252,15 +263,26 @@ function generateReceiptHistory() {
 
                     status: "paid",
 
+                    amount: 500000,
+
+                    paymentMethod: "Transfer Bank",
+
+                    timestamp:
+                        new Date().toLocaleString("id-ID"),
+
                     transactionId:
                         "TF-" +
                         Math.floor(
-                            Math.random() * 99999999
+                            Math.random() * 999999999
                         )
 
                 });
 
             }
+
+            // =========================
+            // UNPAID
+            // =========================
 
             else {
 
@@ -270,6 +292,12 @@ function generateReceiptHistory() {
                         `${monthName} ${year}`,
 
                     status: "unpaid",
+
+                    amount: 0,
+
+                    paymentMethod: "-",
+
+                    timestamp: "-",
 
                     transactionId: null
 
@@ -375,6 +403,174 @@ saveData();
 const alertList =
     document.getElementById("alertList");
 
+const toastContainer =
+    document.getElementById(
+        "toastContainer"
+    );
+
+const statusChartCanvas = document.getElementById("statusChart");
+
+let statusChart = null;
+
+// ========================================
+// STATUS CHART
+// ========================================
+
+function renderStatusChart() {
+
+    let greenCount = 0;
+    let yellowCount = 0;
+    let redCount = 0;
+
+    members.forEach(member => {
+
+        const status =
+            calculateDashboardStatus(member);
+
+        if (status === "green") {
+            greenCount++;
+        }
+
+        if (status === "yellow") {
+            yellowCount++;
+        }
+
+        if (status === "red") {
+            redCount++;
+        }
+
+    });
+
+    // destroy chart lama
+    if (statusChart) {
+        statusChart.destroy();
+    }
+
+    statusChart = new Chart(
+        statusChartCanvas,
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+                    "Aman",
+                    "Pending",
+                    "Menunggak"
+                ],
+
+                datasets: [
+
+                    {
+
+                        data: [
+                            greenCount,
+                            yellowCount,
+                            redCount
+                        ],
+
+                        backgroundColor: [
+                            "#22c55e",
+                            "#facc15",
+                            "#ef4444"
+                        ],
+
+                        borderWidth: 0,
+
+                        hoverOffset: 8
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                cutout: "72%",
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+
+                            usePointStyle: true,
+                            pointStyle: "circle",
+
+                            padding: 20,
+
+                            font: {
+                                family: "Inter"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+// ========================================
+// TOAST NOTIFICATION
+// ========================================
+
+function showToast(
+    message,
+    type = "success"
+) {
+
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        `toast ${type}`;
+
+    toast.innerHTML = `
+
+        <i class="fa-solid
+            ${type === "success"
+            ?
+            "fa-circle-check"
+            :
+            "fa-circle-xmark"
+        }">
+        </i>
+
+        <span>${message}</span>
+
+    `;
+
+    toastContainer.appendChild(
+        toast
+    );
+
+    setTimeout(() => {
+
+        toast.style.animation =
+            "toastHide 0.25s ease forwards";
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 250);
+
+    }, 3000);
+
+}
+
 function renderAlerts() {
 
     let yellowCount = 0;
@@ -456,6 +652,7 @@ function renderAlerts() {
 }
 
 renderAlerts();
+renderStatusChart();
 
 // ========================================
 // MEMBER CARD RENDER
@@ -691,7 +888,11 @@ function renderMembers() {
 
 }
 
-renderMembers();
+setTimeout(() => {
+
+    renderMembers();
+
+}, 800);
 
 // ========================================
 // DELETE MEMBER SYSTEM
@@ -906,7 +1107,10 @@ saveMemberBtn.addEventListener("click", () => {
     // validasi kosong
     if (name === "") {
 
-        alert("Nama anggota wajib diisi");
+        showToast(
+            "Nama anggota wajib diisi",
+            "error"
+        );
 
         return;
 
@@ -988,6 +1192,10 @@ saveMemberBtn.addEventListener("click", () => {
 
     // close modal
     addMemberModal.style.display = "none";
+
+    showToast(
+        "Member berhasil ditambahkan"
+    );
 
 });
 
@@ -1274,11 +1482,18 @@ loginBtn.addEventListener("click", () => {
 
         showAdminControls();
 
+        showToast(
+            "Login admin berhasil"
+        );
+
     }
 
     else {
 
-        alert("Username atau password salah");
+        showToast(
+            "Username atau password salah",
+            "error"
+        );
 
     }
 
@@ -1351,10 +1566,16 @@ saveStatusBtn.addEventListener("click", () => {
 
     if (isAdmin) {
         showAdminControls();
+
     }
+
 
     // close modal
     editModal.style.display = "none";
+
+    showToast(
+        "Status pembayaran diperbarui"
+    );
 
 });
 
@@ -1513,11 +1734,18 @@ confirmDeleteBtn.addEventListener("click", () => {
 
     deleteModal.style.display = "none";
 
+    showToast(
+        "Member berhasil dihapus"
+    );
+
 });
 
 cancelDeleteBtn.addEventListener("click", () => {
 
     deleteModal.style.display = "none";
+    showToast(
+        "Member berhasil dihapus"
+    );
 
 });
 
@@ -1591,6 +1819,10 @@ saveMemberNameBtn.addEventListener("click", () => {
     editMemberModal.style.display =
         "none";
 
+    showToast(
+        "Nama member berhasil diubah"
+    );
+
 });
 
 document.addEventListener("click", (e) => {
@@ -1636,7 +1868,11 @@ searchMemberInput.addEventListener(
     "input",
     () => {
 
-        renderMembers();
+        setTimeout(() => {
+
+            renderMembers();
+
+        }, 800);
 
         if (isAdmin) {
             showAdminControls();
@@ -1664,7 +1900,11 @@ filterButtons.forEach(button => {
             currentFilter =
                 button.dataset.filter;
 
-            renderMembers();
+            setTimeout(() => {
+
+                renderMembers();
+
+            }, 800);
 
             if (isAdmin) {
                 showAdminControls();
@@ -1686,7 +1926,11 @@ sortSelect.addEventListener(
         currentSort =
             sortSelect.value;
 
-        renderMembers();
+        setTimeout(() => {
+
+            renderMembers();
+
+        }, 800);
 
         if (isAdmin) {
             showAdminControls();
@@ -1694,3 +1938,44 @@ sortSelect.addEventListener(
 
     }
 );
+
+// ========================================
+// FIRESTORE REALTIME MEMBERS
+// ========================================
+
+const {
+    collection,
+    onSnapshot
+} = window.firestoreFunctions;
+
+const membersRef =
+    collection(window.db, "members");
+
+onSnapshot(membersRef, (snapshot) => {
+
+    members = snapshot.docs.map(doc => doc.data());
+
+    console.log(
+        "Realtime Members:",
+        members
+    );
+
+    generateReceiptHistory();
+
+    renderMembers();
+
+    renderChecklist();
+
+    renderAlerts();
+
+    renderStatusChart();
+
+    updateDashboard();
+
+    if (isAdmin) {
+
+        showAdminControls();
+
+    }
+
+});

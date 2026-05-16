@@ -89,6 +89,16 @@
 
             </div>
 
+            <div class="chart-card">
+
+                <div class="section-header">
+                    <h3>Status Pembayaran</h3>
+                </div>
+
+                <canvas id="statusChart"></canvas>
+
+            </div>
+
             <!-- ALERT -->
             <div class="section-header">
                 <h3>Perlu Perhatian</h3>
@@ -208,15 +218,18 @@
     <nav class="bottom-nav">
 
         <button class="nav-btn active" data-page="dashboardPage">
-            Dashboard
+            <i class="fa-solid fa-house"></i>
+
         </button>
 
         <button class="nav-btn" data-page="checklistPage">
-            Checklist
+            <i class="fa-solid fa-list-check"></i>
+
         </button>
 
         <button class="nav-btn" id="adminBtn">
-            Admin
+            <i class="fa-solid fa-user"></i>
+
         </button>
 
     </nav>
@@ -418,8 +431,14 @@
 
     </div>
 
+    <div id="toastContainer"></div>
+
     <!-- JS -->
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script type="module" src="firebase.js"></script>
+
+    <script type="module" src="script.js"></script>
 
 </body>
 
